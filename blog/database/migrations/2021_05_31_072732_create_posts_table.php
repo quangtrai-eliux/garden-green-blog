@@ -26,7 +26,7 @@ class CreatePostsTable extends Migration
             $table->unsignedBigInteger('post_type_id');
             $table->foreign('post_type_id')
             ->references('id')
-            ->on('post_type')
+            ->on('post_types')
             ->onDelete('cascade');
             $table->integer('view');
             $table->integer('status');
