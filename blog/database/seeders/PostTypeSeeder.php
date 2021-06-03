@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\PostType;
 
 class PostTypeSeeder extends Seeder
 {
@@ -13,6 +14,6 @@ class PostTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        PostType::factory()->count(10)->create();
     }
 }
