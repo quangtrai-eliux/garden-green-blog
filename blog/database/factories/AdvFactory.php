@@ -22,7 +22,9 @@ class AdvFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'number_block' => $this->faker->numberBetween(1,5), 
+            'uri' => $this->faker->url(),
+            'description' => $this->faker->paragraph($nbSentences = 3, $variableNbSentences = true),
         ];
     }
 }

@@ -22,7 +22,8 @@ class PostTypeFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'post_type_name' => $this->faker->word(),
+            'category_id' => $this->faker->numberBetween(1,10),
         ];
     }
 }

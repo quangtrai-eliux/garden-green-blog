@@ -22,7 +22,13 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'title' => $this->faker->sentence($nbWords = 10, $variableNbWords = true),
+            'description' => $this->faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+            'content' => $this->faker->text($maxNbChars = 300),
+            'user_id' => $this->faker->numberBetween(1,10),
+            'post_type_id' => $this->faker->numberBetween(1,10), 
+            'view' => $this->faker->numberBetween(100,1000),
+            'status' => $this->faker->numberBetween(0,1),
         ];
     }
 }
