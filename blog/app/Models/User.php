@@ -26,6 +26,9 @@ class User extends Authenticatable
         'status',
     ];
 
+    public function post(){
+        return $this->hasMany(Post::class);
+    }
    
     /**
      * The attributes that should be hidden for arrays.

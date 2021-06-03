@@ -18,4 +18,8 @@ class Post extends Model
         'view',
         'status',
     ];
+
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
 }
