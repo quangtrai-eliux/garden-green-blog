@@ -13,7 +13,7 @@ class CreatePostTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('post_type', function (Blueprint $table) {
+        Schema::create('post_types', function (Blueprint $table) {
             $table->id();
             $table->string('post_type_name');
             $table->unsignedBigInteger('category_id');

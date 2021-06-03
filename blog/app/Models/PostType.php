@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PostType extends Model
 {
     use HasFactory;
-    protected $table = 'post_type';
+    protected $table = 'post_types';
     protected $fillable = [
         'post_type_name', 
         'category_id',
