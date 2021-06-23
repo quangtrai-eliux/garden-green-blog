@@ -12,4 +12,8 @@ class Tag extends Model
     protected $fillable = [
         'tag_name', 
     ];
+
+    public function postTags(){
+        return $this->hasMany(PostTag::class);
+    }
 }

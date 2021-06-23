@@ -19,7 +19,19 @@ class Post extends Model
         'status',
     ];
 
-    public function User(){
+    public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function postType(){
+        return $this->belongsTo(PostType::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function postTags(){
+        return $this->hasMany(PostTag::class);
     }
 }
