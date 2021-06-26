@@ -5,5 +5,5 @@ use App\Repositories\RepositoryInterface;
 
 interface AdvRepositoryInterface extends RepositoryInterface
 {
-    
+    public function findOrFail($id);
 }

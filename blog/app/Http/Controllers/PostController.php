@@ -3,10 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
+use App\Models\PostType;
 use Illuminate\Http\Request;
+use App\Repositories\Post\PostRepositoryInterface;
+use App\Repositories\PostType\PostTypeRepositoryInterface;
 
 class PostController extends Controller
 {
+    /**
+     * @var PostRepositoryInterface|\App\Repositories\Repository
+     */
+    protected $postRepo;
+
+    public function __construct(PostRepositoryInterface $postRepo, PostTypeRepositoryInterface $posttypeRepo)
+    {
+        $this-> postRepo = $postRepo;
+        $this-> posttypeRepo = $posttypeRepo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +29,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = $this->postRepo->getAll();
+        return view('posts.index', ['posts' => $posts]);
+
     }
 
     /**
@@ -24,7 +41,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $posttypes = $this->posttypeRepo->getAll();
+        return view('posts.create',['posttypes' => $posttypes]);
     }
 
     /**
@@ -35,7 +53,9 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $post = $this->postRepo->create($data);
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -44,9 +64,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        $post = $this->postRepo->find($id);
+        return view('posts.show', ['post' => $post]);
     }
 
     /**
@@ -55,9 +76,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        $post = $this->postRepo->find($id);
+        return view('posts.edit', array('post' => $post));
     }
 
     /**
@@ -67,9 +89,12 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        //... Validation here
+        $post = $this->postRepo->update($id, $data);
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -78,8 +103,9 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $this->postRepo->delete($id);
+        return redirect()->route('posts.index');
     }
 }

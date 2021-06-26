@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Repositories\Tag\TagRepositoryInterface;
 
 class TagController extends Controller
 {
+    /**
+     * @var TagRepositoryInterface|\App\Repositories\Repository
+     */
+    protected $tagRepo;
+
+    public function __construct(TagRepositoryInterface $tagRepo)
+    {
+        $this-> tagRepo = $tagRepo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,9 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
+        $tags = $this->tagRepo->getAll();
+        return view('tags.index', ['tags' => $tags]);
+
     }
 
     /**
@@ -24,7 +37,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        //
+        return view('tags.create');
     }
 
     /**
@@ -35,7 +48,9 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $tag = $this->tagRepo->create($data);
+        return redirect()->route('tags.index');
     }
 
     /**
@@ -44,9 +59,10 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function show($id)
     {
-        //
+        $tag = $this->tagRepo->find($id);
+        return view('tags.show', ['tag' => $tag]);
     }
 
     /**
@@ -55,9 +71,10 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tag $tag)
+    public function edit($id)
     {
-        //
+        $tag = $this->tagRepo->find($id);
+        return view('tags.edit', array('tag' => $tag));
     }
 
     /**
@@ -67,9 +84,12 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        //... Validation here
+        $tag = $this->tagRepo->update($id, $data);
+        return redirect()->route('tags.index');
     }
 
     /**
@@ -78,8 +98,9 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy($id)
     {
-        //
+        $this->tagRepo->delete($id);
+        return redirect()->route('tags.index');
     }
 }

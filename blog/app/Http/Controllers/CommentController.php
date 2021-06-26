@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Repositories\Comment\CommentRepositoryInterface;
 
 class CommentController extends Controller
 {
+    /**
+     * @var CommentRepositoryInterface|\App\Repositories\Repository
+     */
+    protected $commentRepo;
+
+    public function __construct(CommentRepositoryInterface $commentRepo)
+    {
+        $this-> commentRepo = $commentRepo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,9 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = $this->commentRepo->getAll();
+        return view('comments.index', ['comments' => $comments]);
+
     }
 
     /**
@@ -24,7 +37,7 @@ class CommentController extends Controller
      */
     public function create()
     {
-        //
+        return view('comments.create');
     }
 
     /**
@@ -35,7 +48,9 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $comment = $this->commentRepo->create($data);
+        return redirect()->route('comments.index');
     }
 
     /**
@@ -44,9 +59,10 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show(Comment $comment)
+    public function show($id)
     {
-        //
+        $comment = $this->commentRepo->find($id);
+        return view('comments.show', ['comment' => $comment]);
     }
 
     /**
@@ -55,9 +71,10 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function edit(Comment $comment)
+    public function edit($id)
     {
-        //
+        $comment = $this->commentRepo->find($id);
+        return view('comments.edit', array('comment' => $comment));
     }
 
     /**
@@ -67,9 +84,12 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        //... Validation here
+        $comment = $this->commentRepo->update($id, $data);
+        return redirect()->route('comments.index');
     }
 
     /**
@@ -78,8 +98,9 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        $this->commentRepo->delete($id);
+        return redirect()->route('comments.index');
     }
 }

@@ -11,4 +11,10 @@ class AdvRepository extends BaseRepository implements AdvRepositoryInterface
         return \App\Models\Adv::class;
     }
 
+    public function findOrFail($id)
+    {
+        $result = $this->model->findOrFail($id);
+
+        return $result;
+    }
 }

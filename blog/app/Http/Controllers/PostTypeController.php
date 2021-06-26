@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\PostType;
 use Illuminate\Http\Request;
+use App\Repositories\PostType\PostTypeRepositoryInterface;
 
 class PostTypeController extends Controller
 {
+    /**
+     * @var PostTypeRepositoryInterface|\App\Repositories\Repository
+     */
+    protected $posttypeRepo;
+
+    public function __construct(PostTypeRepositoryInterface $posttypeRepo)
+    {
+        $this-> posttypeRepo = $posttypeRepo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,9 @@ class PostTypeController extends Controller
      */
     public function index()
     {
-        //
+        $posttypes = $this->posttypeRepo->getAll();
+        return view('posttypes.index', ['posttypes' => $posttypes]);
+
     }
 
     /**
@@ -24,7 +37,7 @@ class PostTypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('posttypes.create');
     }
 
     /**
@@ -35,51 +48,59 @@ class PostTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $posttype = $this->posttypeRepo->create($data);
+        return redirect()->route('posttypes.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PostType  $postType
+     * @param  \App\Models\PostType  $posttype
      * @return \Illuminate\Http\Response
      */
-    public function show(PostType $postType)
+    public function show($id)
     {
-        //
+        $posttype = $this->posttypeRepo->find($id);
+        return view('posttypes.show', ['posttype' => $posttype]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\PostType  $postType
+     * @param  \App\Models\PostType  $posttype
      * @return \Illuminate\Http\Response
      */
-    public function edit(PostType $postType)
+    public function edit($id)
     {
-        //
+        $posttype = $this->posttypeRepo->find($id);
+        return view('posttypes.edit', array('posttype' => $posttype));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PostType  $postType
+     * @param  \App\Models\PostType  $posttype
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PostType $postType)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        //... Validation here
+        $posttype = $this->posttypeRepo->update($id, $data);
+        return redirect()->route('posttypes.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PostType  $postType
+     * @param  \App\Models\PostType  $posttype
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PostType $postType)
+    public function destroy($id)
     {
-        //
+        $this->posttypeRepo->delete($id);
+        return redirect()->route('posttypes.index');
     }
 }
